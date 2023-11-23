@@ -88,6 +88,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 }
 /* USER CODE END 0 */
 
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -120,29 +121,109 @@ int main(void)
   MX_USART6_UART_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
+  HAL_GPIO_TogglePin(Led_Status_GPIO_Port, Led_Status_Pin);
+  HAL_Delay(300);
   // MPU6050 specs: https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf
   // MPU6050 register map: https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
 
   // Init the I2C device
-  HAL_StatusTypeDef ret = HAL_I2C_IsDeviceReady(&hi2c1, IMU_ADR_WRITE, 1, HAL_MAX_DELAY);
+  HAL_StatusTypeDef ret = HAL_I2C_IsDeviceReady(&hi2c1, IMU_ADR_WRITE, 1, 100);
   if (ret != HAL_OK) printf("Failed to init device!\n");
 
   // Set the gyroscope scale range to +/-250 deg/s
   // Register 27 (see register map p14)
   uint8_t data = 0;
-  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 27, 1, &data, 1, HAL_MAX_DELAY);
+  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 27, 1, &data, 1, 100);
   if (ret != HAL_OK) printf("Failed to setup gyroscope range!\n");
   
   // Set the accelerometer scale range to +/-2G deg/s
   // Register 28 (see register map p15)
   data = 0;
-  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 28, 1, &data, 1, HAL_MAX_DELAY);
+  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 28, 1, &data, 1, 100);
   if (ret != HAL_OK) printf("Failed to setup accelerometer range!\n");
   
   // Exit sleep mode / Wake up the device. We won't receive any data when it is in sleep mode.
   // Register 107 (see register map p40)
   data = 0;
-  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 107, 1, &data, 1, HAL_MAX_DELAY);
+  ret = HAL_I2C_Mem_Write(&hi2c1, IMU_ADR_WRITE, 107, 1, &data, 1, 100);
   if (ret != HAL_OK) printf("Failed to wake up the device!\n");
   
   printf("MPU6050 Initialized correctly\n");

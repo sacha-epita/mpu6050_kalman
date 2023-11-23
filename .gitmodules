@@ -1,3 +1,6 @@
 [submodule "Eigen"]
 	path = Eigen
 	url = git@github.com:libigl/eigen.git
+[submodule "BazelUtilities"]
+	path = BazelUtilities
+	url = git@github.com:0-Sacha/BazelUtilities.git

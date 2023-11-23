@@ -1,2 +1,7 @@
-build/
 .vscode/settings
+
+build_dir/
+bazel-bin/
+bazel-out/
+bazel-mpu6050_kalman/
+bazel-testlogs/
