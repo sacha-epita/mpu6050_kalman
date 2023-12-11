@@ -1,7 +1,7 @@
 # Prerequisite
-To understand this tutorial, you will need some prerequisites :
- - Little bit knowledge on matrices computation
- - Basic command line using your preferred Terminal (Powershell in my case)
+To understand this tutorial, you will need some prerequisite :
+ - Little bit of math
+ - Command line
  - C/C++ embedded programming
  - STM32 programming and toolchain
 
@@ -9,7 +9,7 @@ To understand this tutorial, you will need some prerequisites :
 In this tutorial we will implement a really simple I2C communication with an [IMUs (Inertial Measurement Unit)](https://en.wikipedia.org/wiki/Inertial_measurement_unit) and program an [Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter) to filter out the data in order to get the attitude (orientation) of our sensor.
 It is used in [spacecraft attitude control](https://en.wikipedia.org/wiki/Spacecraft_attitude_control).
 
-## Stuff Needed
+## Stuff Needded
 
 For doing the same exercise, you will need :
 - An MCU, I will use 'Black Pill V1.2' using an STM32F401CCU6. You can use any mcu, an STM32 is better to be able to follow the I2C communication part. Since we will use a lot of floating point math, an mcu with FPU (Floating Point Unit) is way better. (STM32F4 has one).
@@ -34,19 +34,19 @@ To be able to build you will need at least these programs:
      - package `mingw-w64-x86_64-make`
      - [Git](https://git-scm.com/download/win)
 
- - For Linux you will need to find the package name related to your installation (see a link [here](https://pkgs.org/)):
+ - For Linux you will need to find package name related to your installation
     - package **arm-none-eabi-gcc**
     - package **stlink**
     - package **make**
     - 
-# Explanation of terms
+# Therms explanation
 
 ## IMUs
 
 An [IMUs (Inertial Measurement Unit)](https://en.wikipedia.org/wiki/Inertial_measurement_unit) is a sensor that measures the body's applied force, rotation rate and orientation.
 It's a major component in all attitude control systems (aircraft, rockets, missiles).
 
-The one we will use is a [MEMS (Micro-ElectroMechanical Systems)](https://en.wikipedia.org/wiki/MEMS),they are microscopic devices that use the same production mechanism as semiconductors.
+The one we will use is a [MEMS (Micro-ElectroMechanical Systems)](https://en.wikipedia.org/wiki/MEMS),they are microscopic device that use the same production mechanism as semiconductors.
 Those sensor are smartphone grade thus small, light and low power consumption.
 They still have sufficient accuracy for every day product.
 
@@ -67,19 +67,18 @@ We can really use those sensor separately,
 This allows the use of both advantages: Accelerometer for long-term correction of our orientation and gyroscope for short-term correction.
 
 
-One of the most popular filters is the [Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter). This filter has two steps :  prediction, and correction.
+One of the most popular is the [Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter). This filter has two steps :
  
 ### Prediction Step
-The filter predicts the current state based on the last estimation.
-The prediction step is used when we have a sensor that doesn't get refreshed often enough. The algorithm is still able to predict steps if we want a faster loop than the sensor is able to give us. For example GPS tend to have a very slow refresh rate.
+The filter is able to predict the current state based on the last estimation and the matrix model that will be described below.
+The prediction step is used when we have a sensor that doesn't get refreshed often enough. The algorithm is still able to predict steps if we want a faster loop than the sensor is able to give us.
 
 #### Example
-If we want to predict the roll of an airplane. To make the prediction we use the old roll angle known and we can use the roll angle (previously measured) to adjust the new roll prediction.
+For example with the roll. The current roll angle is the last estimated roll angle with the addition of the roll rate.
 \text{Roll}(t) = \text{Roll}(t - 1) + \text{RollRate}(t - 1) \cdot \Delta T
 
 ### Correction Step
-This step is called every time new sensor data. With the last estimation, the confidence in this prediction and with noise values (stored as matrices) it will correct the new sensor data.
-Sensor has noise and this step gets the new data and limits the noise to the prediction.
+This step is called every time new sensor data are available. With the last estimation, the confidence in this prediction (stored as 'noise' matrices) it will 'correct' (denoise) the new sensor data.
 
 # Implementation
 
@@ -96,10 +95,10 @@ We will use 100 KHz (I2C Standard-Mode) for simplicity.
 - Set the crystal at the right speed in the clock configuration menu. And set the max speed for the HCLK clock (The one in the middle) in my case it is `84 MHz`
 ![clock_config](imgs/clock_config.png)
 
-- Finally in Pinout and Configuration, enable :
-  - I2C used by your MPU6050 (my is on I2C1 with pins PB8; PB9)
-  - UART for telemetry output (my is on UART6 with pins PA11; PA12)
-  - In System Core / SYS enable Debug: Serial Wire if you use an ST-Link for debugging
+- Finally in Pinout and Configuration
+- I2C on yours MPU6050 pins (my is on I2C1 with pins PB8; PB9)
+- UART for telemetry output (my is on UART6 with pins PA11; PA12)
+- In System Core / SYS enable Debug: Serial Wire if you use an ST-Link for debugging
 ![debug_config](imgs/debug_config.png)
 
 - For the Kalman Filter we need a proper delta time, even though it is possible to have a non constant delta time, we will use a timer to get a known and stable delta time. So Enable any **General purpose timer**, like TIM2 and enable global interrupt of this one.
@@ -415,18 +414,7 @@ And this give us, for the roll measurement:
  - In Blue the gyroscope value (GyroY)
 ![roll_kf_vs_gyro](imgs/roll_kf_vs_gyro.png)
 
-But You can see a problems of filters in general: lag.
-Which can be reduced by:
-- Tuning correctly matrices `Q` and `R`.
-- Having a better model matrice `F`.
-- With a complete Kalman Filter.
-
-# Conclusion
-In this text, we have set up communication with an [IMU (Inertial Measurement Unit)](https://en.wikipedia.org/wiki/Inertial_measurement_unit), which is a sensor that we can use to compute the attitude (orientation) of a body. And to compute this attitude correctly, we used a simplified [Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter).
-It is a [sensor fusion](https://en.wikipedia.org/wiki/Sensor_fusion) algorithm that combines data from different sensors (in our case, an accelerometer and a gyroscope) to filter out to a usable signal.
-
-As said earlier the Kalman Filter used here is a simplified version (it doesn't have the `Q` and `R` matrices.).
-So if you want to go further checkout [readthedocs](https://ahrs.readthedocs.io/en/latest/filters/ekf.html).
+But You can see a problems of filters in general: lag, which can be reduced by tuning correctly matrices `Q` and `R`, having a better model matrice `F`, and with others component of a Kalman Filter (that I have removed for the purposes of this exercise).
 
 # Projects Files
 You can find every files on my [github](https://github.com/sacha-epita/mpu6050_kalman).
